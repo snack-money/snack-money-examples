@@ -36,11 +36,15 @@ cp .env.example .env
 CDP_API_KEY_ID=your_api_key_id
 CDP_API_KEY_SECRET=your_api_key_secret
 CDP_WALLET_SECRET=your_wallet_secret
+WALLET_ADDRESS=your_wallet_address
 RECEIVER=USE_YOUR_OWN_X_ACCOUNT
 AMOUNT=0.01
 ```
 
-**Note**: Use your own X (Twitter) account as the receiver to test the integration.
+**Notes**:
+- Use your own X (Twitter) account as the receiver to test the integration
+- You need to provide an existing CDP wallet address that was created with these credentials
+- Fund this wallet with USDC on Base network before running the example
 
 ## Usage
 
@@ -60,14 +64,15 @@ npm start
 ## How it works
 
 1. Initializes Coinbase CDP client with API credentials
-2. Gets or creates a server-managed wallet account
-3. Converts the CDP account to a viem account for x402
-4. Wraps axios with the x402 payment interceptor
-5. Makes a POST request to `/payments/x/pay`
-6. The interceptor handles the 402 Payment Required response
-7. Executes the payment on Base network
-8. Retries the request with payment proof
-9. Returns the successful response
+2. Uses your existing CDP wallet address from .env
+3. Exports the private key from CDP for the wallet address
+4. Creates a viem account from the exported private key
+5. Wraps axios with the x402 payment interceptor
+6. Makes a POST request to `/payments/x/pay`
+7. The interceptor handles the 402 Payment Required response
+8. Executes the payment on Base network
+9. Retries the request with payment proof
+10. Returns the successful response
 
 ## Why CDP SDK?
 

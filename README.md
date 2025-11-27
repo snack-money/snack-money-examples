@@ -11,11 +11,11 @@ Snack Money enables USDC payments to users across multiple platforms (X/Twitter,
 Each example demonstrates sending USDC to X (Twitter) users via configurable environment variables.
 
 ### 1. [axios](./axios) - x402-axios
-Multi-network support with axios HTTP client
+Axios HTTP client with x402 payment interceptor
 - ✅ Base network
-- ✅ Solana network
-- ✅ Automatic network selection
 - ✅ Payment interceptor pattern
+- ✅ Simple integration
+- ✅ Type-safe TypeScript
 
 ### 2. [cdp-sdk](./cdp-sdk) - Coinbase CDP SDK
 Server-side wallet management with MPC security
@@ -34,9 +34,9 @@ Native fetch API wrapper
 ### 4. [thirdweb](./thirdweb) - thirdweb
 Managed infrastructure with thirdweb API
 - ✅ Base network
-- ✅ Solana network
 - ✅ Managed payment infrastructure
-- ✅ No private key exposure
+- ✅ x402 wrapper
+- ✅ No private key in code
 
 ## Quick Start
 

@@ -4,17 +4,16 @@ This example demonstrates how to send USDC payments to X (Twitter) users using t
 
 ## Features
 
-- Automatic server wallet creation with thirdweb in-app wallets
-- Multi-network support (Base and Solana)
+- Base network support
 - x402 payment protocol integration via thirdweb API
 - Simple fetch-based API
-- No manual wallet management or private key handling
+- No private key handling in your code
 
 ## Prerequisites
 
 - Node.js 18+
 - Thirdweb account and secret key ([Sign up here](https://thirdweb.com/dashboard))
-- USDC balance in your thirdweb wallet
+- Wallet address with USDC on Base network
 
 ## Installation
 
@@ -33,15 +32,16 @@ cp .env.example .env
 
 3. Add your configuration to `.env`:
 ```env
-THIRDWEB_CLIENT_ID=your_client_id
 THIRDWEB_SECRET_KEY=your_thirdweb_secret_key
+WALLET_ADDRESS=your_wallet_address
 RECEIVER=USE_YOUR_OWN_X_ACCOUNT
 AMOUNT=0.01
 ```
 
-**Note**:
-- Use your own X (Twitter) account as the receiver to test the integration.
-- The server wallet will be created automatically - no need to provide a wallet address.
+**Notes**:
+- Use your own X (Twitter) account as the receiver to test the integration
+- Provide a wallet address that has USDC on Base network
+- The wallet must be accessible by your thirdweb account
 
 ## Usage
 
@@ -60,22 +60,18 @@ npm start
 
 ## How it works
 
-1. Creates a thirdweb client with your credentials
-2. Connects to or creates an in-app server wallet automatically
-3. Encodes the Snack Money API endpoint URL
-4. Makes a request to thirdweb's x402 payment wrapper
-5. Thirdweb handles the x402 negotiation and payment execution
-6. Supports both Base and Solana networks automatically
-7. Returns the payment response with transaction details
+1. Takes your wallet address and thirdweb credentials
+2. Encodes the Snack Money API endpoint URL with required parameters
+3. Makes a POST request to thirdweb's x402 payment wrapper
+4. Thirdweb handles the x402 negotiation and payment execution on Base
+5. Returns the payment response with transaction details
 
 ## Why thirdweb?
 
 - **Managed infrastructure**: No need to run your own payment infrastructure
-- **Multi-network support**: Automatically handles Base and Solana
-- **Automatic wallet creation**: In-app wallets created on the fly
-- **Server wallets**: Secure server-side wallet management
 - **Simple API**: Just one fetch call with your credentials
-- **No private key exposure**: Keys managed securely by thirdweb
+- **No private key in code**: Keys managed securely by thirdweb
+- **x402 wrapper**: Handles the payment protocol automatically
 
 ## Testing
 

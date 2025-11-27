@@ -4,7 +4,7 @@ This example demonstrates how to send USDC payments to X (Twitter) users using t
 
 ## Features
 
-- Multi-network support (Base and Solana)
+- Base network support
 - Automatic x402 payment negotiation
 - Simple axios-based API
 - Type-safe TypeScript implementation
@@ -12,8 +12,8 @@ This example demonstrates how to send USDC payments to X (Twitter) users using t
 ## Prerequisites
 
 - Node.js 18+
-- USDC balance on Base or Solana
-- Private keys for both networks
+- USDC balance on Base network
+- EVM private key
 
 ## Installation
 
@@ -31,7 +31,6 @@ cp .env.example .env
 2. Add your configuration to `.env`:
 ```env
 EVM_PRIVATE_KEY=0x...
-SVM_PRIVATE_KEY=your_solana_private_key_base58
 RECEIVER=USE_YOUR_OWN_X_ACCOUNT
 AMOUNT=0.01
 ```
@@ -55,11 +54,11 @@ npm start
 
 ## How it works
 
-1. Creates signers for both Base and Solana networks
+1. Creates a Base signer from your private key
 2. Wraps axios with the x402 payment interceptor
 3. Makes a POST request to `/payments/x/pay`
 4. The interceptor handles the 402 Payment Required response
-5. Executes the payment on the appropriate network
+5. Executes the payment on Base network
 6. Retries the request with payment proof
 7. Returns the successful response
 
@@ -72,7 +71,7 @@ Start with a small amount (0.01 USDC = 1¢) to test the integration.
 ```
 🚀 Starting Snack Money payment example with x402-axios
 
-✅ Created multi-network signers (Base + Solana)
+✅ Base signer created
 💸 Sending 0.01 USDC to @username on X...
 
 ✅ Payment successful!
