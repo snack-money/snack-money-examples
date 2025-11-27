@@ -1,22 +1,20 @@
 import axios from "axios";
 import { config } from "dotenv";
+import { privateKeyToAccount } from "viem/accounts";
 import {
   withPaymentInterceptor,
   decodeXPaymentResponse,
-  createSigner,
   type Hex,
-  MultiNetworkSigner,
 } from "x402-axios";
 
 config();
 
 const evmPrivateKey = process.env.EVM_PRIVATE_KEY as Hex;
-const svmPrivateKey = process.env.SVM_PRIVATE_KEY as string;
 const receiver = process.env.RECEIVER as string;
 const amount = parseFloat(process.env.AMOUNT || "0.01");
 
-if (!evmPrivateKey || !svmPrivateKey || !receiver) {
-  console.error("Missing required environment variables: EVM_PRIVATE_KEY, SVM_PRIVATE_KEY, and RECEIVER");
+if (!evmPrivateKey || !receiver) {
+  console.error("Missing required environment variables: EVM_PRIVATE_KEY and RECEIVER");
   process.exit(1);
 }
 
@@ -30,19 +28,16 @@ if (!evmPrivateKey || !svmPrivateKey || !receiver) {
 async function main(): Promise<void> {
   console.log("🚀 Starting Snack Money payment example with x402-axios\n");
 
-  // Create signers for both Base and Solana networks
-  const evmSigner = await createSigner("base", evmPrivateKey);
-  const svmSigner = await createSigner("solana", svmPrivateKey);
-  const signer = { evm: evmSigner, svm: svmSigner } as MultiNetworkSigner;
-
-  console.log("✅ Created multi-network signers (Base + Solana)");
+  // Create Base signer from private key
+  const account = privateKeyToAccount(evmPrivateKey);
+  console.log("✅ Base signer created");
 
   // Create axios instance with payment interceptor
   const api = withPaymentInterceptor(
     axios.create({
       baseURL: "https://api.snack.money",
     }),
-    signer,
+    account as never,
   );
 
   console.log(`💸 Sending ${amount} USDC to @${receiver} on X...\n`);

@@ -22,7 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "x402-fetch": "^0.1.2"
+    "x402-fetch": "^0.7.3"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

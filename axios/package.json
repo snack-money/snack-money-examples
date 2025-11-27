@@ -23,7 +23,7 @@
   "dependencies": {
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
-    "x402-axios": "^0.1.2"
+    "x402-axios": "^0.7.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
