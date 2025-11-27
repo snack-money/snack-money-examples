@@ -1,0 +1,32 @@
+{
+  "name": "snack-money-axios-example",
+  "version": "1.0.0",
+  "description": "Example of using x402-axios to make payments via Snack Money API",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "keywords": [
+    "x402",
+    "axios",
+    "snack-money",
+    "payment",
+    "usdc",
+    "base",
+    "solana"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "x402-axios": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

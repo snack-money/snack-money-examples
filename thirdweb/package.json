@@ -1,0 +1,30 @@
+{
+  "name": "snack-money-thirdweb-example",
+  "version": "1.0.0",
+  "description": "Example of using thirdweb to make payments via Snack Money API",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "keywords": [
+    "thirdweb",
+    "x402",
+    "snack-money",
+    "payment",
+    "usdc",
+    "base",
+    "solana"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "thirdweb": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
