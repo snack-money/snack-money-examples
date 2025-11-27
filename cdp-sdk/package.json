@@ -21,7 +21,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@coinbase/cdp-sdk": "^0.14.0",
+    "@coinbase/cdp-sdk": "^1.38.6",
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "viem": "^2.21.54",
