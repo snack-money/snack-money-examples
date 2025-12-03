@@ -38,6 +38,13 @@ Managed infrastructure with thirdweb API
 - ✅ x402 wrapper
 - ✅ No private key in code
 
+### 5. [crossmint](./crossmint) - Crossmint Smart Wallets
+Smart contract wallet with x402 protocol
+- ✅ Base network
+- ✅ Smart wallet infrastructure
+- ✅ Account abstraction
+- ✅ Viem-compatible interface
+
 ## Quick Start
 
 Each example has its own directory with:
