@@ -1,13 +1,13 @@
 # Snack Money Crossmint Smart Wallet Example
 
-This example demonstrates how to send USDC payments to X (Twitter) users using the Snack Money API with Crossmint's API-based signing and x402 payment protocol.
+This example demonstrates how to send USDC payments to X (Twitter) users using the Snack Money API with Crossmint's API-based signing and x402-axios.
 
 ## Features
 
 - **API-based signing** - No private key exposure in your code
 - **Smart contract wallets** (Account Abstraction)
-- **Crossmint transaction API** - Execute transactions via REST API
-- **x402 protocol** - Demonstrates manual x402 payment flow
+- **x402-axios integration** - Automatic payment handling
+- **EIP-712 typed data signing** - Secure payment authorization
 - **Base network support**
 - **Type-safe TypeScript**
 
@@ -15,18 +15,16 @@ This example demonstrates how to send USDC payments to X (Twitter) users using t
 
 Unlike other examples that use private keys directly, this example showcases:
 
-1. **Crossmint's signing API** - Signs transactions through Crossmint's REST API
-2. **Smart wallet transactions** - Uses Crossmint's transaction endpoint to execute payments
+1. **Crossmint's Signature API** - Signs messages and typed data through Crossmint's REST API
+2. **Custom viem Account** - Implements a LocalAccount that uses Crossmint for signing
 3. **No private key in code** - All signing happens via API calls to Crossmint
-4. **Manual x402 flow** - Demonstrates the x402 protocol steps explicitly
+4. **Smart wallet integration** - Uses Crossmint smart wallets with x402 protocol
 
 ## Prerequisites
 
 - Node.js 18+
 - **Existing Crossmint smart wallet** (create via [Crossmint Console](https://www.crossmint.com/console))
-- Crossmint server-side API key with permissions:
-  - `wallets:transactions.create`
-  - `wallets:transactions.sign`
+- Crossmint server-side API key with signature permissions
 - **Smart wallet funded with USDC on Base network**
 
 ## Installation
@@ -85,56 +83,61 @@ npm run build
 npm start
 ```
 
-## How it works
+## How it Works
 
-This example demonstrates the x402 payment protocol flow using Crossmint's API-based signing:
+This example uses x402-axios with a custom Crossmint account adapter:
 
-### Step 1: Initial Request
-Makes a POST request to Snack Money API. Receives a `402 Payment Required` response with payment details.
-
-### Step 2: Parse Payment Requirements
-Extracts payment information from the 402 response:
-- Amount required (in USDC)
-- Payment recipient address
-- Network (Base)
-- Transaction data
-
-### Step 3: Execute Payment via Crossmint API
-Uses Crossmint's transaction API to execute the USDC transfer:
+### Step 1: Create Custom Account
+Creates a viem `LocalAccount` that uses Crossmint's Signature API for signing:
 ```typescript
-POST /api/2025-06-09/wallets/{walletLocator}/transactions
-```
-The smart wallet sends USDC to the specified address. No private keys in your code!
-
-### Step 4: Retry with Payment Proof
-Retries the original request with the transaction hash as proof of payment:
-```typescript
-headers: { "X-Payment-Receipt": JSON.stringify({ txHash, chain }) }
+const account = toAccount({
+  address: smartWalletAddress,
+  signMessage: async ({ message }) => {
+    // Request signature via Crossmint API
+    // Poll for completion
+    // Return signature
+  },
+  signTypedData: async (typedData) => {
+    // Same pattern for EIP-712 typed data
+  }
+});
 ```
 
-### Step 5: Success
-Snack Money verifies the payment on-chain and returns a success response.
+### Step 2: Integrate with x402-axios
+Wraps the custom account with the x402 payment interceptor:
+```typescript
+const api = withPaymentInterceptor(
+  axios.create({ baseURL: "https://api.snack.money" }),
+  crossmintAccount
+);
+```
+
+### Step 3: Make Payment
+The interceptor automatically handles the x402 protocol:
+1. Receives `402 Payment Required` response
+2. Signs EIP-712 payment authorization via Crossmint API
+3. Retries request with signed payment header
+4. Returns successful payment response
 
 ## Architecture Diagram
 
 ```
-┌─────────────────┐
-│  Your Code      │
-│  (index.ts)     │
-└────────┬────────┘
+┌─────────────────────────┐
+│  Your Code (index.ts)   │
+│  - Custom viem Account  │
+│  - x402-axios          │
+└────────┬────────────────┘
          │
          ▼
-┌─────────────────┐     HTTP API
-│ Crossmint API   │◄────┐
-│ (signing &      │     │ Sign & Execute
-│  transactions)  │     │ via REST API
-└────────┬────────┘     │
-         │              │
-         ▼              │
-  ┌────────────┐        │
-  │Smart Wallet│────────┘
+┌─────────────────────────┐
+│  Crossmint Signature API│◄──── Sign messages & typed data
+│  (REST API)             │
+└─────────────────────────┘
+         │
+         ▼
+  ┌────────────┐
+  │Smart Wallet│───► USDC Transfer
   │(on Base)   │
-  │Holds USDC  │
   └────────────┘
 ```
 
@@ -142,10 +145,10 @@ Snack Money verifies the payment on-chain and returns a success response.
 
 - **No Private Key Exposure**: All signing happens through Crossmint's API
 - **Smart Contract Wallets**: Account abstraction enables advanced features
-- **API-First**: Manage wallets and transactions via REST API calls
-- **Enterprise Security**: Crossmint handles key management with MPC
-- **Easy Integration**: Standard REST API calls, no blockchain libraries needed
-- **Compliance-Friendly**: Custodial architecture supports regulatory requirements
+- **Secure Signing**: EIP-712 typed data signing for payment authorization
+- **API-First**: Manage wallets and signatures via REST API calls
+- **Enterprise Security**: Crossmint handles key management
+- **Easy Integration**: Works seamlessly with x402-axios
 
 ## Testing
 
@@ -156,23 +159,12 @@ Start with a small amount (0.01 USDC = 1¢) to test the integration.
 ```
 🚀 Starting Snack Money payment example with Crossmint Smart Wallet
 
-✅ Smart Wallet Address: 0xabcd...ef00
-💡 Check balance: https://basescan.org/address/0xabcd...ef00
+✅ Smart Wallet Address: 0x2fEF716212C1F9af1bf90e50c09b093f9a0173F5
+💡 Check balance: https://basescan.org/address/0x2fEF716212C1F9af1bf90e50c09b093f9a0173F5
 
-💸 Initiating x402 payment flow: 0.01 USDC to @username on X...
+🔐 Creating Crossmint account...
 
-📋 Received x402 Payment Required (402 status)
-
-💳 Payment Requirements:
-   Amount: 0.01 USDC
-   Pay to: 0x1234...5678
-   Network: base
-
-🔐 Creating transaction via Crossmint API...
-
-✅ Transaction submitted: 0xabc123...
-
-🔄 Retrying request with payment proof...
+💸 Sending 0.01 USDC to @0xmesuthere on X...
 
 ✅ Payment successful!
 
@@ -180,35 +172,46 @@ Start with a small amount (0.01 USDC = 1¢) to test the integration.
   "code": 200,
   "msg": "0.01 USDC sent successfully",
   "data": {
-    "txn_id": "...",
+    "txn_id": "1764730167847",
     "amount": 0.01,
-    "receipt": "https://snack.money/x/username?txn=..."
+    "receipt": "https://snack.money/twitter/0xmesuthere?txn=1764730167847"
   }
 }
+
+🔐 Payment Response Details: {
+  "network": "base",
+  "payer": "0x2fEF716212C1F9af1bf90e50c09b093f9a0173F5",
+  "success": true,
+  "transaction": "0x3bdbad3850b8ea34df5dc5a0efb1ec410cc4ccc52500f4beae1fa77d67e16216"
+}
+
+🧾 Receipt: https://snack.money/twitter/0xmesuthere?txn=1764730167847
 ```
 
 ## Troubleshooting
 
-### API Key Permission Error
-Ensure your Crossmint API key has these permissions:
-- `wallets:transactions.create`
-- `wallets:transactions.sign`
+### Signature Failed
+If you see signature errors:
+1. Ensure your Crossmint API key has signature permissions
+2. Verify `WALLET_LOCATOR` format includes wallet type (e.g., `:evm-smart-wallet`)
+3. Check that the wallet exists in Crossmint Console
 
 ### Wallet Not Found
 Verify that:
 1. `WALLET_LOCATOR` matches your wallet in Crossmint Console
-2. `SMART_WALLET_ADDRESS` is the correct address for your wallet
+2. Format: `email:your@email.com:evm-smart-wallet` (note the wallet type suffix)
+3. `SMART_WALLET_ADDRESS` is the correct address for your wallet
 
 ### Insufficient Balance
 Make sure your smart wallet has:
 1. Sufficient USDC for the payment
 2. Sufficient ETH for gas fees on Base
 
-### Transaction Failed
+### Payment Failed
 Check that:
-1. Your wallet address is funded with USDC on Base network
+1. Your wallet is funded with USDC on Base network
 2. The API key has correct permissions
-3. The wallet locator format is correct (email:... or evm-keypair:0x...)
+3. You're using your own X account as the receiver for testing
 
 ## Learn More
 
