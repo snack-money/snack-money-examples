@@ -30,7 +30,7 @@ Unlike other examples that use private keys directly, this example showcases:
 ## Installation
 
 ```bash
-npm install
+yarn install
 ```
 
 ## Configuration
@@ -73,14 +73,14 @@ AMOUNT=0.01
 Build and run the example:
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 Or build separately:
 
 ```bash
-npm run build
-npm start
+yarn build
+yarn start
 ```
 
 ## How it Works
