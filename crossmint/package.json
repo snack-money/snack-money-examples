@@ -1,0 +1,35 @@
+{
+  "name": "snack-money-crossmint-example",
+  "version": "1.0.0",
+  "description": "Example of using Crossmint Smart Wallets with API-based signing and x402 protocol via Snack Money API",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js"
+  },
+  "keywords": [
+    "x402",
+    "crossmint",
+    "smart-wallet",
+    "snack-money",
+    "payment",
+    "usdc",
+    "base",
+    "api-signing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "viem": "^2.21.54",
+    "x402": "^0.7.2",
+    "x402-axios": "^0.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
